@@ -1,5 +1,8 @@
-def greet(name) {
-    println "Hello ${name}!"
+job {
+    name('example-job')
+    steps {
+        dsl {
+            script('hello-world.dsl')
+        }
+    }
 }
-
-greet(params.name)
