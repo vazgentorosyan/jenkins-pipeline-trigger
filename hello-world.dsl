@@ -1,19 +1,21 @@
-def pipelineJobName = "HelloWorld"
-
-pipelineJob(pipelineJobName) {
+pipeline {
+    agent any
     parameters {
-        stringParam('NAME', 'World', 'Enter your name')
+        string(name: 'name', defaultValue: 'World', description: 'Name to greet')
     }
-
-    definition {
-        cps {
-            script(readFileFromWorkspace('hello-world.groovy'))
+    stages {
+        stage('Greeting') {
+            steps {
+                script {
+                    def message = "Hello ${params.name}!"
+                    println message
+                }
+            }
+        }
+        stage('List Files') {
+            steps {
+                sh 'ls -la'
+            }
         }
     }
 }
-
-// Create a Groovy script file in the Jenkins workspace directory that will print a message to the console
-fileExists('hello-world.groovy') ?: writeWorkspaceFile('hello-world.groovy', """
-    def name = params.NAME ?: 'World'
-    echo "Hello, \${name}!"
-""")
